@@ -28,4 +28,8 @@ export default class InputHandler {
 
         return axis;
     }
+
+    isActionPressed(action) {
+        return this.keysPressed.includes(action);
+    }
 }

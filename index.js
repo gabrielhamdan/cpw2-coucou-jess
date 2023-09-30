@@ -8,7 +8,7 @@ window.addEventListener("load", () => {
     const context = canvas.getContext("2d");
 
     const game = new Game(canvas.width, canvas.height, context);
-    
+
     function loop() {
         context.clearRect(0, 0, canvas.width, canvas.height);
         game.render();
@@ -16,4 +16,5 @@ window.addEventListener("load", () => {
     }
 
     loop();
+
 });
