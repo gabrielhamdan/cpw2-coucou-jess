@@ -18,6 +18,6 @@ export default class LetterCube {
         this.ctx.textAlign = "center"
         this.ctx.textBaseline = "middle"
         this.ctx.fillText(this.letter, this.position.x + this.width / 2, this.position.y + this.height / 2);
-        this.collider.draw(this.position.x, this.position.y, this.ctx, true);
+        this.collider.draw(this.position.x, this.position.y, this.ctx);
     }
 }

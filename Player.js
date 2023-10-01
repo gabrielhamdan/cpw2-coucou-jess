@@ -3,6 +3,7 @@ import Vector2 from "./Vector2.js";
 import Util from "./Util.js";
 import Sprite from "./Sprite.js";
 import Collider from "./Collider.js";
+import LetterCube from "./LetterCube.js";
 
 const LEFT = "ArrowLeft";
 const RIGHT = "ArrowRight";
@@ -28,27 +29,23 @@ export default class Player {
         this.gravity = 3;
         this.jump_speed = -320;
 
-        this.isDebugMode = false;
-
         this.collidingBody = null;
     }
 
     draw() {
         this.sprite.render(this.position.x, this.position.y, this.game.context);
-        this.collider.draw(this.position.x, this.position.y, this.game.context, this.isDebugMode);
+        this.collider.draw(this.position.x, this.position.y, this.game.context);
     }
     
     update() {
-        this.collidingBody = this.collider.isColliding(this.collider, this.position.x, this.position.y);
-        
-        if(this.collidingBody != null)
-            console.log(this.collidingBody.letter);
-
         this.#move();
 
         if(this.inputHandler.isActionPressed(TOGGLE_DEBUG)) {
-            this.isDebugMode = !this.isDebugMode;
+            Collider.toggleDebugMode();
         }
+
+        if(this.collidingBody instanceof LetterCube)
+           this.game.checkLetter(this.collidingBody);
     }
 
     #move() {
@@ -66,15 +63,16 @@ export default class Player {
         if(dir != 0) {
             this.sprite.setSpriteDirection = dir;
             this.velocity.x = Util.lerp(this.velocity.x, dir * this.speed, this.acceleration);
-        }
-        else 
-            this.velocity.x = Util.lerp(this.velocity.x, 0, this.friction);
+        } else 
+            this.velocity.x = Util.lerp(this.velocity.x, 0.0, this.friction);
         
         if(this.#isOnFloor() && this.inputHandler.isActionPressed(JUMP))
             this.velocity.y = Util.lerp(this.velocity.y, this.jump_speed, 0.1);
     
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
+
+        this.collidingBody = this.collider.isColliding(this, this.position.x, this.position.y);
     }
 
     #isOnFloor() {

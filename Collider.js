@@ -11,34 +11,47 @@ export default class Collider {
         this.width = width;
         this.height = height;
         this.position = position;
+        this.isDebugMode = false;
         this.color = GREEN;
         Collider.instances.push(this);
     }
 
-    draw(x, y, ctx, isDebugMode) {
-        if(isDebugMode) {
+    static toggleDebugMode() {
+        Collider.instances.forEach(instance => {
+            instance.isDebugMode = !instance.isDebugMode;
+        })
+    }
+
+    draw(x, y, ctx) {
+        if(this.isDebugMode) {
             ctx.fillStyle = this.color;
             ctx.fillRect(x, y, this.width, this.height);
             ctx.fillStyle = "black";
         }
     }
 
-    isColliding(collider, x, y) {
+    isColliding(body, x, y) {
         let collidingBody = null;
+
         Collider.instances.forEach(instance => {
-            if(instance != collider)
+            if(instance != body.collider)
                 if(
-                    x > instance.position.x + instance.width ||
-                    x + collider.width < instance.position.x ||
-                    y > instance.position.y + instance.height ||
-                    y + collider.height < instance.position.y
+                    x < instance.position.x + instance.width &&
+                    x + body.collider.width > instance.position.x &&
+                    y < instance.position.y + instance.height &&
+                    y + body.collider.height > instance.position.y
                 ) {
-                    this.color = GREEN;
-                    instance.color = GREEN;
-                } else {
-                    this.color = RED;
+                    body.position.x -= body.velocity.x;
+                    body.position.y -= body.velocity.y;
+                    body.velocity.x = 0;
+                    body.velocity.y = 0;
+                    body.collider.color = RED;
                     instance.color = RED;
                     collidingBody = instance.body;
+                    return;
+                } else {
+                    body.collider.color = GREEN;
+                    instance.color = GREEN;
                 }
         });
 
