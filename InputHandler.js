@@ -4,6 +4,8 @@ export default class InputHandler {
         this.keysPressed = [];
 
         window.addEventListener("keydown", e => {
+            e.preventDefault();
+            
             if(inputMap.includes(e.key) && !this.keysPressed.includes(e.key))
                 this.keysPressed.push(e.key);
         });

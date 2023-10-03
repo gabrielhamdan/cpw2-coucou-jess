@@ -1,3 +1,4 @@
+import CubeSpawn from "./CubeSpawn.js";
 import LetterCube from "./LetterCube.js";
 import Player from "./Player.js";
 import Util from "./Util.js";
@@ -9,9 +10,10 @@ export default class Game {
         this.height = height;
         this.context = context;
         this.player = new Player(this);
-        this.cube1 = new LetterCube("C", this.context, new Vector2(200, 300));
+        this.cube1 = new LetterCube("C", this.context, new Vector2(100, 300));
         this.cube2 = new LetterCube("E", this.context, new Vector2(400, 300));
         this.cube3 = new LetterCube("S", this.context, new Vector2(600, 300));
+        this.cubeSpawn = new CubeSpawn(this.context);
         this.words = ["coucou", "jess"];
         this.secretWord = undefined;
         this.guess = "";
@@ -20,8 +22,8 @@ export default class Game {
     startGame() {
         this.secretWord = this.#getRandomWord();
         this.#refreshGuess();
-        console.log("secretWord: " + this.secretWord);
         this.#printSecretWord("");
+        this.cubeSpawn.spawnCubes(this.secretWord);
     }
 
     #refreshGuess() {
@@ -35,7 +37,8 @@ export default class Game {
             if(this.secretWord[i] === letter.toLowerCase())
                 this.guess = Util.replaceAt(i, letter.toLowerCase(), this.guess);
 
-        console.log(this.guess);
+        const secretWordPanel = document.getElementById("guess");
+        secretWordPanel.innerHTML = this.guess.toUpperCase();
     }
 
     #getRandomWord() {
@@ -45,9 +48,10 @@ export default class Game {
     render() {
         this.player.draw();
         this.player.update();
-        this.cube1.draw();
-        this.cube2.draw();
-        this.cube3.draw();
+        this.cubeSpawn.render();
+        // this.cube1.draw();
+        // this.cube2.draw();
+        // this.cube3.draw();
     }
 
     update() {
