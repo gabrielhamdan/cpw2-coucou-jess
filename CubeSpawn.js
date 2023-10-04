@@ -1,8 +1,10 @@
 import LetterCube from "./LetterCube.js";
+import Util from "./Util.js";
 import Vector2 from "./Vector2.js";
 
-const MAX_CUBES = 6;
-const FIRST_X_POS = 100;
+const MAX_CUBES = 9;
+const FIRST_X_POS = 60;
+const GAP_BETWEEN_CUBES = 140;
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVXYWZ"
 
 export default class CubeSpawn {
@@ -10,29 +12,44 @@ export default class CubeSpawn {
         this.ctx = ctx;
         this.cubes = [];
         this.lettersInWord = [];
+        this.lettersToSpawn = [];
     }
 
     #getLettersInWord(secretWord) {
         for(let i = 0; i < secretWord.length; i++)
             if(!this.lettersInWord.includes(secretWord[i]))
-                this.lettersInWord.push(secretWord[i]);
-        
-        console.log(this.lettersInWord)
+                this.lettersInWord.push(secretWord[i]);        
     }
 
     spawnCubes(secretWord) {
         this.#getLettersInWord(secretWord);
 
-        let xPos = FIRST_X_POS;
         for(let i = 0; i < MAX_CUBES; i++) {
-            const randIndex = Math.floor(Math.random() * this.lettersInWord.length);
-            const letter = this.lettersInWord[randIndex];
-            this.lettersInWord = this.lettersInWord.splice(randIndex, 1);
-            console.log(this.lettersInWord)
+            let randIndex;
+            let letter;
 
-            this.cubes.push(new LetterCube(letter.toUpperCase(), this.ctx, new Vector2(xPos, 300)));
-            xPos += 200;
+            if(this.lettersInWord.length > 0) {
+                randIndex = Math.floor(Math.random() * this.lettersInWord.length);
+                letter = this.lettersInWord[randIndex];
+                this.lettersInWord.splice(randIndex, 1);
+            } else {
+                randIndex = Math.floor(Math.random() * ALPHABET.length);
+                letter = ALPHABET[randIndex];
+            }
+
+            this.lettersToSpawn.push(letter);
         }
+
+        this.lettersToSpawn = Util.shuffleArray(this.lettersToSpawn);
+        console.log(this.lettersToSpawn)
+
+        let xPos = FIRST_X_POS;
+        this.lettersToSpawn.forEach((letter, i) => {
+            this.cubes.push(new LetterCube(letter.toUpperCase(), this.ctx, new Vector2(xPos, i % 2 == 0 ? 350 : 300)));
+            xPos += GAP_BETWEEN_CUBES;
+        });
+        
+        this.lettersToSpawn = [];
     }
 
     render() {
