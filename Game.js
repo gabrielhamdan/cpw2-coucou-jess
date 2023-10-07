@@ -1,6 +1,7 @@
 import CubeSpawn from "./CubeSpawn.js";
 import LetterCube from "./LetterCube.js";
 import Player from "./Player.js";
+import Timer from "./Timer.js";
 import Util from "./Util.js";
 import Vector2 from "./Vector2.js";
 
@@ -10,13 +11,12 @@ export default class Game {
         this.height = height;
         this.context = context;
         this.player = new Player(this);
-        this.cube1 = new LetterCube("C", this.context, new Vector2(100, 300));
-        this.cube2 = new LetterCube("E", this.context, new Vector2(400, 300));
-        this.cube3 = new LetterCube("S", this.context, new Vector2(600, 300));
         this.cubeSpawn = new CubeSpawn(this.context);
         this.words = ["coucou", "jess"];
         this.secretWord = undefined;
         this.guess = "";
+        this.timer = new Timer(this, 60);
+        this.isPaused = false;
     }
 
     startGame() {
@@ -24,6 +24,7 @@ export default class Game {
         this.#refreshGuess();
         this.#printSecretWord("");
         this.cubeSpawn.spawnCubes(this.secretWord);
+        this.timer.start();
     }
 
     #refreshGuess() {
@@ -49,9 +50,6 @@ export default class Game {
         this.player.draw();
         this.player.update();
         this.cubeSpawn.render();
-        // this.cube1.draw();
-        // this.cube2.draw();
-        // this.cube3.draw();
     }
 
     update() {

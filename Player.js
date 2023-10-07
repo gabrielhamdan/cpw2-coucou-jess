@@ -9,13 +9,14 @@ const LEFT = "ArrowLeft";
 const RIGHT = "ArrowRight";
 const JUMP = " ";
 const TOGGLE_DEBUG = "d";
+const PAUSE = "p"
 
 const FLOOR_HEIGHT = 500;
 
 export default class Player {
     constructor(game) {
         this.game = game;
-        this.inputHandler = new InputHandler([LEFT, RIGHT, JUMP, TOGGLE_DEBUG]);
+        this.inputHandler = new InputHandler([LEFT, RIGHT, JUMP, TOGGLE_DEBUG, PAUSE]);
         this.width = 90;
         this.height = 123;
         this.position = new Vector2(200, 500);
@@ -42,6 +43,11 @@ export default class Player {
 
         if(this.inputHandler.isActionPressed(TOGGLE_DEBUG)) {
             Collider.toggleDebugMode();
+        }
+
+        if(this.inputHandler.isActionPressed(PAUSE)) {
+            this.game.isPaused = !this.game.isPaused;
+            this.game.timer.start();    
         }
 
         if(this.collidingBody instanceof LetterCube)

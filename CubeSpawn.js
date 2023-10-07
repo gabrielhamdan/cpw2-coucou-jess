@@ -41,7 +41,6 @@ export default class CubeSpawn {
         }
 
         this.lettersToSpawn = Util.shuffleArray(this.lettersToSpawn);
-        console.log(this.lettersToSpawn)
 
         let xPos = FIRST_X_POS;
         this.lettersToSpawn.forEach((letter, i) => {
