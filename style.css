@@ -9,27 +9,39 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    background-color: #E08445;
 }
 
 .wrapper {
-    width: 1280px;
-    height: 720px;
+    width: 1290px;
+    height: 730px;
+    cursor: url("./assets/cursor.png") 25 15, auto;
+}
+
+.gui {
+    width: 1290px;
+    height: 150px;
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: space-around;
+    color: #0585C6;
+}
+
+.timer {
+    width: 100%;
+    margin: 0 100px;
 }
 
 .guess {
-    position: absolute;
-    margin-top: 15px;
     width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
     text-align: center;
     letter-spacing: 10px;
+    position: absolute;
 }
 
 canvas {
-    border: 5px solid black;
+    border: 5px solid #DDC2D3;
     display: block;
     image-rendering: pixelated;
     image-rendering: crisp-edges;

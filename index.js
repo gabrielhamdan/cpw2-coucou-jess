@@ -7,15 +7,19 @@ window.addEventListener("load", () => {
 
     const context = canvas.getContext("2d");
 
-    const game = new Game(canvas.width, canvas.height, context);
+    const timerElement = document.getElementById("timer");
+
+    const game = new Game(canvas.width, canvas.height, context, timerElement);
     game.startGame();
 
     function loop() {
         context.clearRect(0, 0, canvas.width, canvas.height);
         game.render();
-        requestAnimationFrame(loop);
+        game.update();
+
+        if(!game.isGameOver)
+            requestAnimationFrame(loop);
     }
 
     loop();
-
 });

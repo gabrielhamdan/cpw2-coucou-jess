@@ -45,16 +45,17 @@ export default class Player {
             Collider.toggleDebugMode();
         }
 
-        if(this.inputHandler.isActionPressed(PAUSE)) {
+        if(this.inputHandler.isActionPressed(PAUSE))
             this.game.isPaused = !this.game.isPaused;
-            this.game.timer.start();    
-        }
 
         if(this.collidingBody instanceof LetterCube)
            this.game.checkLetter(this.collidingBody);
     }
 
     #move() {
+        if(this.game.isPaused)
+            return;
+
         if(!this.#isOnFloor()) {
             this.velocity.y += this.gravity;
             this.speed = 20;

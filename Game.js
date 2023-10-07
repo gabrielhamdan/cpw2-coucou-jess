@@ -1,12 +1,14 @@
 import CubeSpawn from "./CubeSpawn.js";
-import LetterCube from "./LetterCube.js";
 import Player from "./Player.js";
 import Timer from "./Timer.js";
 import Util from "./Util.js";
-import Vector2 from "./Vector2.js";
+
+const FPM = 3600;
+const FIVE_SEC = 300;
+const TEN_SEC = 600;
 
 export default class Game {
-    constructor(width, height, context) {
+    constructor(width, height, context, timerElement) {
         this.width = width;
         this.height = height;
         this.context = context;
@@ -15,8 +17,10 @@ export default class Game {
         this.words = ["coucou", "jess"];
         this.secretWord = undefined;
         this.guess = "";
-        this.timer = new Timer(this, 60);
+        this.timer = new Timer(this, FPM);
         this.isPaused = false;
+        this.timerElement = timerElement;
+        this.isGameOver = false;
     }
 
     startGame() {
@@ -24,7 +28,7 @@ export default class Game {
         this.#refreshGuess();
         this.#printSecretWord("");
         this.cubeSpawn.spawnCubes(this.secretWord);
-        this.timer.start();
+        
     }
 
     #refreshGuess() {
@@ -40,6 +44,8 @@ export default class Game {
 
         const secretWordPanel = document.getElementById("guess");
         secretWordPanel.innerHTML = this.guess.toUpperCase();
+
+        // checkWord();
     }
 
     #getRandomWord() {
@@ -48,16 +54,24 @@ export default class Game {
 
     render() {
         this.player.draw();
-        this.player.update();
         this.cubeSpawn.render();
+        this.printTime();
     }
 
+    printTime() {
+        this.timerElement.innerHTML = this.timer.seconds;
+    }
+    
     update() {
-        this.render();
+        this.timer.update();
+        this.player.update();
+        this.isGameOver = this.timer.seconds <= 0;
     }
 
     checkLetter(letterCube) {
         if(this.secretWord.indexOf(letterCube.letter.toLowerCase()) >= 0 && this.guess.indexOf(letterCube.letter.toLowerCase()) < 0)
             this.#printSecretWord(letterCube.letter)
+        else if(this.secretWord.indexOf(letterCube.letter.toLowerCase()) < 0)
+            this.timer.seconds = -FIVE_SEC;
     }
 }

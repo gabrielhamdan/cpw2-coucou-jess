@@ -5,14 +5,17 @@ export default class Timer {
         this.id = null;
     }
 
-    start() {
-        this.id = setInterval(()=> {
-            if(this.game.isPaused) {
-                clearInterval(this.id);
-                return;
-            }
+    get seconds() {
+        return Math.round(this.time / 60);
+    }
 
-            console.log(this.time--);
-        }, 1000);
+    set seconds(sec) {
+        console.log(sec)
+        this.time += sec;
+    }
+
+    update() {
+        if(!this.game.isPaused)
+            this.time--;
     }
 }
