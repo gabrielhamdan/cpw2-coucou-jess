@@ -23,14 +23,6 @@ export default class Game {
         this.isGameOver = false;
     }
 
-    startGame() {
-        this.secretWord = this.#getRandomWord();
-        this.#refreshGuess();
-        this.#printSecretWord("");
-        this.cubeSpawn.spawnCubes(this.secretWord);
-        
-    }
-
     #refreshGuess() {
         this.guess = "";
         for(let i = 0; i < this.secretWord.length; i++)
@@ -45,27 +37,33 @@ export default class Game {
         const secretWordPanel = document.getElementById("guess");
         secretWordPanel.innerHTML = this.guess.toUpperCase();
 
-        // checkWord();
+        this.#checkWord();
+    }
+
+    #checkWord() {
+        if(this.guess.toLowerCase() == this.secretWord.toLowerCase()) {
+            this.timer.seconds = TEN_SEC;
+            if(this.words.length > 0)
+                this.startGame();
+            else this.isGameOver = true;
+        }
     }
 
     #getRandomWord() {
-        return this.words[Math.floor(Math.random() * this.words.length)];
+        this.words = Util.shuffleArray(this.words);
+        return this.words.pop();
     }
 
-    render() {
-        this.player.draw();
-        this.cubeSpawn.render();
-        this.printTime();
-    }
-
-    printTime() {
+    #printTime() {
         this.timerElement.innerHTML = this.timer.seconds;
     }
-    
-    update() {
-        this.timer.update();
-        this.player.update();
-        this.isGameOver = this.timer.seconds <= 0;
+
+    startGame() {
+        this.secretWord = this.#getRandomWord();
+        this.#refreshGuess();
+        this.#printSecretWord("");
+        this.cubeSpawn.spawnCubes(this.secretWord);
+        
     }
 
     checkLetter(letterCube) {
@@ -73,5 +71,17 @@ export default class Game {
             this.#printSecretWord(letterCube.letter)
         else if(this.secretWord.indexOf(letterCube.letter.toLowerCase()) < 0)
             this.timer.seconds = -FIVE_SEC;
+    }
+    
+    render() {
+        this.player.draw();
+        this.cubeSpawn.render();
+        this.#printTime();
+    }
+
+    update() {
+        this.isGameOver = this.timer.seconds <= 0;
+        this.timer.update();
+        this.player.update();
     }
 }

@@ -1,3 +1,7 @@
+import Util from "./Util.js";
+
+const FPM = 3600;
+
 export default class Timer {
     constructor(game, time) {
         this.game = game;
@@ -10,8 +14,8 @@ export default class Timer {
     }
 
     set seconds(sec) {
-        console.log(sec)
-        this.time += sec;
+        const t = Util.clamp(this.time + sec, 0, FPM);
+        this.time = t;
     }
 
     update() {
