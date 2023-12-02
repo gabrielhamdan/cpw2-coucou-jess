@@ -8,10 +8,23 @@
 </head>
 <body>
     <div class="wrapper">
+        <img src="./assets/compendium-icon.png" id="menuBtn" class="menu-btn">
         <div class="gui">
+            <img src="./assets/timer-sprite.png" class="timer-sprite">
             <h2 id="timer" class="timer"></h2>
             <h1 id="guess" class="guess"></h1>
-            <img src="">
+        </div>
+        <div class="menu-wrapper">
+            <div class="menu" id="menu">
+                <div class="menu-content" id="guessedWordsDiv"></div>
+                <div class="menu-content" id="entriesDiv"></div>
+            </div>
+        </div>
+        <div id="gameOverScreen" class="game-over-screen">
+            <h2 id="gameOverTitle" class="game-over-msg">Game Over</h2>
+            <img src="./assets/replay-btn.png" class="replay-btn" id="replayBtn">
+        </div>
+        <div class="floor">
         </div>
         <canvas id="canvas"></canvas>
     </div>

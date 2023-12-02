@@ -8,18 +8,20 @@ import LetterCube from "./LetterCube.js";
 const LEFT = "ArrowLeft";
 const RIGHT = "ArrowRight";
 const JUMP = " ";
-const TOGGLE_DEBUG = "d";
-const PAUSE = "p"
+const TOGGLE_DEBUG = undefined;
 
 const FLOOR_HEIGHT = 500;
+
+const BORDER_L = 0;
+const BORDER_R = 1180;
 
 export default class Player {
     constructor(game) {
         this.game = game;
-        this.inputHandler = new InputHandler([LEFT, RIGHT, JUMP, TOGGLE_DEBUG, PAUSE]);
+        this.inputHandler = new InputHandler([LEFT, RIGHT, JUMP, TOGGLE_DEBUG]);
         this.width = 90;
         this.height = 123;
-        this.position = new Vector2(200, 500);
+        this.position = new Vector2(600, 500);
         this.sprite = new Sprite(this.width, this.height, "./assets/player_sprite_scaledup.png");
         this.collider = new Collider(this, this.width, this.height);
         this.isColliding = false;
@@ -44,9 +46,6 @@ export default class Player {
         if(this.inputHandler.isActionPressed(TOGGLE_DEBUG)) {
             Collider.toggleDebugMode();
         }
-
-        if(this.inputHandler.isActionPressed(PAUSE))
-            this.game.isPaused = !this.game.isPaused;
 
         if(this.collidingBody instanceof LetterCube)
            this.game.checkLetter(this.collidingBody);
@@ -80,6 +79,11 @@ export default class Player {
         this.position.y += this.velocity.y;
 
         this.collidingBody = this.collider.isColliding(this, this.position.x, this.position.y);
+
+        if(this.position.x <= BORDER_L)
+            this.position.x = BORDER_L;
+        else if(this.position.x >= BORDER_R)
+            this.position.x = BORDER_R;
     }
 
     #isOnFloor() {

@@ -13,8 +13,12 @@ export default class LetterCube {
     }
 
     draw() {
+        const gui = document.getElementsByClassName("gui")[0];
+        const font = window.getComputedStyle(gui).font;
+
         this.sprite.render(this.position.x, this.position.y, this.ctx);
-        this.ctx.font = "32px serif";
+        this.ctx.font = font;
+        this.ctx.fillStyle = "#FFE4F5";
         this.ctx.textAlign = "center"
         this.ctx.textBaseline = "middle"
         this.ctx.fillText(this.letter, this.position.x + this.width / 2, this.position.y + this.height / 2);
